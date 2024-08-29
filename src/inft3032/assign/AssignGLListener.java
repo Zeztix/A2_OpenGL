@@ -26,6 +26,7 @@ import javax.media.opengl.GLEventListener;
 public class AssignGLListener implements GLEventListener {
 
 	Scene scene;
+	private Shader shader;
 
 	public AssignGLListener(Scene s) {
 		this.scene = s;
@@ -33,10 +34,29 @@ public class AssignGLListener implements GLEventListener {
 	
 	// Called once at the start. Initialisation code goes here
 	public void init(GLAutoDrawable drawable) {
+		
 		GL3 gl = drawable.getGL().getGL3();
 		
 		gl.glClearColor(0, 0, 0, 0); // Set colour to black
 		gl.glEnable(GL.GL_CULL_FACE); // Enable backface culling
+		
+		//Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());
+		//Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), scene.camera.getAspectRatio(), 0.1f, 10.0f);
+		
+		// Initialise and compile shaders
+		try {
+			shader = new Shader(new File("shaders/SimpleShader.vert"), new File("shaders/SimpleShader.frag"));
+			shader.compile(gl);
+			System.out.println("Shaders have compiled succesfully.");
+			
+			// Not needed as of now
+			//shader.setUniform("projection", projectionMatrix, gl);
+			//shader.setUniform("view", viewMatrix, gl);
+			//shader.setUniform("model", new Matrix4(), gl);
+		} 
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		
 		for (Shape s : scene.shapes) {
 			s.init(gl);
@@ -45,13 +65,19 @@ public class AssignGLListener implements GLEventListener {
 	
 	// Called every frame. You should have your update and render code here
 	public void display(GLAutoDrawable drawable) {
+		
 		GL3 gl = drawable.getGL().getGL3();
-
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT); // Clear colour and depth buffers
+		
+		// Enable the shader
+		shader.enable(gl);
 		
 		for (Shape s : scene.shapes) {
 			s.draw(gl);
 		}
+		
+		// Disable the shader
+		shader.disable(gl);
 	}
 
 	// Called once at the end. You should clean up any resources here
