@@ -40,19 +40,23 @@ public class AssignGLListener implements GLEventListener {
 		gl.glClearColor(0, 0, 0, 0); // Set colour to black
 		gl.glEnable(GL.GL_CULL_FACE); // Enable backface culling
 		
-		//Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());
-		//Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), scene.camera.getAspectRatio(), 0.1f, 10.0f);
-		
-		// Initialise and compile shaders
-		try {
-			shader = new Shader(new File("shaders/VertexColour.vert"), new File("shaders/VertexColour.frag"));
-			shader.compile(gl);
-			System.out.println("Shaders have compiled succesfully.");
-			
-			// Not needed as of now
-			//shader.setUniform("projection", projectionMatrix, gl);
-			//shader.setUniform("view", viewMatrix, gl);
-			//shader.setUniform("model", new Matrix4(), gl);
+		// Projection matrices setup
+	    Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), scene.camera.getAspectRatio(), 0.1f, 10.0f);
+	    Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());
+	    Matrix4 modelMatrix = new Matrix4();
+	    
+	    // Initialise and compile shaders
+	    try {
+	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/VertexColour.frag"));
+	        shader.compile(gl);
+	        System.out.println("Shaders have compiled successfully.");
+	        
+	        shader.enable(gl);
+	        
+	        // Set uniform locations
+	        shader.setUniform("projection", projectionMatrix, gl);
+	        shader.setUniform("view", viewMatrix, gl);
+	        shader.setUniform("model", modelMatrix, gl);
 		} 
 		catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -86,6 +90,15 @@ public class AssignGLListener implements GLEventListener {
 
 	// Called when the window is resized. You should update your projection matrix here.
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		
 		GL3 gl = drawable.getGL().getGL3();
+		
+		// Get the new aspect ratio and projection matrix
+		float aspect = (float) width / height;
+		Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), aspect, 0.1f, 10.0f);
+		
+		// Enable shader and up the projection matrix
+		shader.enable(gl);
+		shader.setUniform("projection", projectionMatrix, gl);
 	}
 }
