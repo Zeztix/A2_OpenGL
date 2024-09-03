@@ -45,7 +45,7 @@ public class AssignGLListener implements GLEventListener {
 		
 		// Initialise and compile shaders
 		try {
-			shader = new Shader(new File("shaders/SimpleShader.vert"), new File("shaders/SimpleShader.frag"));
+			shader = new Shader(new File("shaders/VertexColour.vert"), new File("shaders/VertexColour.frag"));
 			shader.compile(gl);
 			System.out.println("Shaders have compiled succesfully.");
 			
