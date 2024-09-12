@@ -12,6 +12,7 @@ import inft3032.drawables.Vertex;
 import inft3032.lighting.PointLight;
 import inft3032.math.Matrix4;
 import inft3032.math.MatrixFactory;
+import inft3032.math.Ray;
 import inft3032.math.Vector3;
 import inft3032.scene.Scene;
 
@@ -39,24 +40,12 @@ public class AssignGLListener implements GLEventListener {
 		
 		gl.glClearColor(0, 0, 0, 0); // Set colour to black
 		gl.glEnable(GL.GL_CULL_FACE); // Enable backface culling
-		
-		// Projection matrices setup
-	    Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), scene.camera.getAspectRatio(), 0.1f, 10.0f);
-	    Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());
-	    Matrix4 modelMatrix = new Matrix4();
 	    
 	    // Initialise and compile shaders
 	    try {
-	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/VertexColour.frag"));
+	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformDiffuse.frag"));
 	        shader.compile(gl);
 	        System.out.println("Shaders have compiled successfully.");
-	        
-	        shader.enable(gl);
-	        
-	        // Set uniform locations
-	        shader.setUniform("projection", projectionMatrix, gl);
-	        shader.setUniform("view", viewMatrix, gl);
-	        shader.setUniform("model", modelMatrix, gl);
 		} 
 		catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -72,11 +61,21 @@ public class AssignGLListener implements GLEventListener {
 		
 		GL3 gl = drawable.getGL().getGL3();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT); // Clear colour and depth buffers
-		
-		// Enable the shader
+        
 		shader.enable(gl);
 		
+		// Projection matrices setup
+		Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), scene.camera.getAspectRatio(), 0.1f, 100.0f);
+		Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());
+		
+		// Set uniform locations
+		shader.setUniform("projection", projectionMatrix, gl);
+	    shader.setUniform("view", viewMatrix, gl);
+	    
 		for (Shape s : scene.shapes) {
+			Matrix4 modelMatrix = s.transform;
+			shader.setUniform("model", modelMatrix, gl);
+			
 			s.draw(gl);
 		}
 		

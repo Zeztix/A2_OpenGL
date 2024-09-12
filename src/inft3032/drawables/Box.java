@@ -3,8 +3,14 @@
 //
 package inft3032.drawables;
 
+import inft3032.assign.AssignGLListener;
+import inft3032.assign.Shader;
+import inft3032.math.Matrix4;
+import inft3032.math.MatrixFactory;
 import inft3032.math.Vector3;
+import inft3032.scene.Scene;
 
+import java.io.File;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
@@ -53,40 +59,40 @@ public class Box extends Shape {
 		// Define the vertices (2 triangles to form the square on each face)
 		vertices = new float[] {
 				// Front face
-			    -width, -height, depth, r, g, b,
-			    width, -height, depth, r, g, b,
-			    width, height, depth, r, g, b,
-			    -width, height, depth, r, g, b,
+			    -width / 2, -height / 2, depth / 2, r, g, b,
+			    width / 2, -height / 2, depth / 2, r, g, b,
+			    width / 2, height / 2, depth / 2, r, g, b,
+			    -width / 2, height / 2, depth / 2, r, g, b,
 
 			    // Back face
-			    -width, -height, -depth, r, g, b,
-			    width, -height, -depth, r, g, b,
-			    width, height, -depth, r, g, b,
-			    -width, height, -depth, r, g, b,
+			    -width / 2, -height / 2, -depth / 2, r, g, b,
+			    width / 2, -height / 2, -depth / 2, r, g, b,
+			    width / 2, height / 2, -depth / 2, r, g, b,
+			    -width / 2, height / 2, -depth / 2, r, g, b,
 
 			    // Left face
-			    -width, -height, -depth, r, g, b,
-			    -width, -height, depth, r, g, b,
-			    -width, height, depth, r, g, b,
-			    -width, height, -depth, r, g, b,
+			    -width / 2, -height / 2, -depth / 2, r, g, b,
+			    -width / 2, -height / 2, depth / 2, r, g, b,
+			    -width / 2, height / 2, depth / 2, r, g, b,
+			    -width / 2, height / 2, -depth / 2, r, g, b,
 
 			    // Right face
-			    width, -height, -depth, r, g, b,
-			    width, -height, depth, r, g, b,
-			    width, height, depth, r, g, b,
-			    width, height, -depth, r, g, b,
+			    width / 2, -height / 2, -depth / 2, r, g, b,
+			    width / 2, -height / 2, depth / 2, r, g, b,
+			    width / 2, height / 2, depth / 2, r, g, b,
+			    width / 2, height / 2, -depth / 2, r, g, b,
 
 			    // Top face
-			    -width, height, depth, r, g, b,
-			    width, height, depth, r, g, b,
-			    width, height, -depth, r, g, b,
-			    -width, height, -depth, r, g, b,
+			    -width / 2, height / 2, depth / 2, r, g, b,
+			    width / 2, height / 2, depth / 2, r, g, b,
+			    width / 2, height / 2, -depth / 2, r, g, b,
+			    -width / 2, height / 2, -depth / 2, r, g, b,
 
 			    // Bottom face
-			    -width, -height, depth, r, g, b,
-			    width, -height, depth, r, g, b,
-			    width, -height, -depth, r, g, b,
-			    -width, -height, -depth, r, g, b,
+			    -width / 2, -height / 2, depth  / 2, r, g, b,
+			    width / 2, -height / 2, depth / 2, r, g, b,
+			    width / 2, -height / 2, -depth / 2, r, g, b,
+			    -width / 2, -height / 2, -depth / 2, r, g, b,
 		};
 		
 		// Bind and send the index data
