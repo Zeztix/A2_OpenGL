@@ -71,6 +71,8 @@ public class AssignGLListener implements GLEventListener {
 		// Set uniform locations
 		shader.setUniform("projection", projectionMatrix, gl);
 	    shader.setUniform("view", viewMatrix, gl);
+	    shader.setUniform("ambientIntensity", new Vector3(0.1f, 0.1f, 0.1f), gl);
+	    shader.setUniform("objectColour", new Vector3(1.0f, 1.0f, 1.0f), gl);
 	    
 		for (Shape s : scene.shapes) {
 			Matrix4 modelMatrix = s.transform;
