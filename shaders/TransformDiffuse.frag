@@ -1,10 +1,12 @@
 #version 330
 
 in vec4 vertColour;
-in vec2 vertTextCoord;
+in vec3 fragNormal;
 
 uniform vec3 ambientIntensity;
 uniform vec3 objectColour;
+uniform vec3 lightPosition;
+uniform vec3 lightColour;
 
 out vec4 fragColour;
 

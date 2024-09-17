@@ -59,40 +59,40 @@ public class Box extends Shape {
 		// Define the vertices (2 triangles to form the square on each face)
 		vertices = new float[] {
 				// Front face
-			    -width / 2, -height / 2, depth / 2, r, g, b,
-			    width / 2, -height / 2, depth / 2, r, g, b,
-			    width / 2, height / 2, depth / 2, r, g, b,
-			    -width / 2, height / 2, depth / 2, r, g, b,
+			    -width / 2, -height / 2, depth / 2, 0.0f, 0.0f, 1.0f, r, g, b,
+			    width / 2, -height / 2, depth / 2, 0.0f, 0.0f, 1.0f, r, g, b,
+			    width / 2, height / 2, depth / 2, 0.0f, 0.0f, 1.0f, r, g, b,
+			    -width / 2, height / 2, depth / 2, 0.0f, 0.0f, 1.0f, r, g, b,
 
 			    // Back face
-			    -width / 2, -height / 2, -depth / 2, r, g, b,
-			    width / 2, -height / 2, -depth / 2, r, g, b,
-			    width / 2, height / 2, -depth / 2, r, g, b,
-			    -width / 2, height / 2, -depth / 2, r, g, b,
+			    -width / 2, -height / 2, -depth / 2, 0.0f, 0.0f, -1.0f, r, g, b,
+			    width / 2, -height / 2, -depth / 2, 0.0f, 0.0f, -1.0f, r, g, b,
+			    width / 2, height / 2, -depth / 2, 0.0f, 0.0f, -1.0f, r, g, b,
+			    -width / 2, height / 2, -depth / 2, 0.0f, 0.0f, -1.0f, r, g, b,
 
 			    // Left face
-			    -width / 2, -height / 2, -depth / 2, r, g, b,
-			    -width / 2, -height / 2, depth / 2, r, g, b,
-			    -width / 2, height / 2, depth / 2, r, g, b,
-			    -width / 2, height / 2, -depth / 2, r, g, b,
+			    -width / 2, -height / 2, -depth / 2, -1.0f, 0.0f, 0.0f, r, g, b,
+			    -width / 2, -height / 2, depth / 2, -1.0f, 0.0f, 0.0f, r, g, b,
+			    -width / 2, height / 2, depth / 2, -1.0f, 0.0f, 0.0f, r, g, b,
+			    -width / 2, height / 2, -depth / 2, -1.0f, 0.0f, 0.0f, r, g, b,
 
 			    // Right face
-			    width / 2, -height / 2, -depth / 2, r, g, b,
-			    width / 2, -height / 2, depth / 2, r, g, b,
-			    width / 2, height / 2, depth / 2, r, g, b,
-			    width / 2, height / 2, -depth / 2, r, g, b,
+			     width / 2, -height / 2, -depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
+			     width / 2, -height / 2, depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
+			     width / 2, height / 2, depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
+			     width / 2, height / 2, -depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
 
 			    // Top face
-			    -width / 2, height / 2, depth / 2, r, g, b,
-			    width / 2, height / 2, depth / 2, r, g, b,
-			    width / 2, height / 2, -depth / 2, r, g, b,
-			    -width / 2, height / 2, -depth / 2, r, g, b,
+			    -width / 2, height / 2, depth / 2, 0.0f, 1.0f, 0.0f, r, g, b,
+			    width / 2, height / 2, depth / 2, 0.0f, 1.0f, 0.0f, r, g, b,
+			    width / 2, height / 2, -depth / 2, 0.0f, 1.0f, 0.0f, r, g, b,
+			    -width / 2, height / 2, -depth / 2, 0.0f, 1.0f, 0.0f, r, g, b,
 
 			    // Bottom face
-			    -width / 2, -height / 2, depth  / 2, r, g, b,
-			    width / 2, -height / 2, depth / 2, r, g, b,
-			    width / 2, -height / 2, -depth / 2, r, g, b,
-			    -width / 2, -height / 2, -depth / 2, r, g, b,
+			    -width / 2, -height / 2, depth / 2, 0.0f, -1.0f, 0.0f, r, g, b,
+			    width / 2, -height / 2, depth / 2, 0.0f, -1.0f, 0.0f, r, g, b,
+			    width / 2, -height / 2, -depth / 2, 0.0f, -1.0f, 0.0f, r, g, b,
+			    -width / 2, -height / 2, -depth / 2, 0.0f, -1.0f, 0.0f, r, g, b,
 		};
 		
 		// Bind and send the index data
@@ -124,9 +124,9 @@ public class Box extends Shape {
 		gl.glBufferData(GL.GL_ARRAY_BUFFER, vertices.length * 4, FloatBuffer.wrap(vertices), GL.GL_STATIC_DRAW);
 		
 		// Tell OpenGL data is used for a vertex attribute
-		gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6*4, 0); // Position
-		gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6*4, 2*4); // Normal
-		gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 6*4, 3*4); // Colour
+		gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0); // Position
+		gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4); // Normal
+		gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4); // Colour
 		
 		gl.glEnableVertexAttribArray(0);
 		gl.glEnableVertexAttribArray(1);
@@ -138,7 +138,7 @@ public class Box extends Shape {
 	}
 	
 	public void draw(GL3 gl) {
-		
+
 		// Bind the VAO and draw the triangle
 		gl.glBindVertexArray(vao);
 		gl.glDrawElements(GL.GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);

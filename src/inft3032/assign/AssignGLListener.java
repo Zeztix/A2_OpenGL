@@ -43,7 +43,7 @@ public class AssignGLListener implements GLEventListener {
 	    
 	    // Initialise and compile shaders
 	    try {
-	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformDiffuse.frag"));
+	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformToon.frag"));
 	        shader.compile(gl);
 	        System.out.println("Shaders have compiled successfully.");
 		} 
@@ -66,13 +66,17 @@ public class AssignGLListener implements GLEventListener {
 		
 		// Projection matrices setup
 		Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), scene.camera.getAspectRatio(), 0.1f, 100.0f);
-		Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());
+		Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());	
 		
 		// Set uniform locations
 		shader.setUniform("projection", projectionMatrix, gl);
 	    shader.setUniform("view", viewMatrix, gl);
-	    shader.setUniform("ambientIntensity", new Vector3(0.1f, 0.1f, 0.1f), gl);
-	    shader.setUniform("objectColour", new Vector3(1.0f, 1.0f, 1.0f), gl);
+	    
+	    // Loop through all lights in the scene
+	    for (int i = 0; i != scene.lights.length; i++) {
+	    	shader.setUniform("lightPosition", scene.lights[i].location, gl);
+	    	shader.setUniform("lightColour", scene.lights[i].colour, gl);
+	    }
 	    
 		for (Shape s : scene.shapes) {
 			Matrix4 modelMatrix = s.transform;
