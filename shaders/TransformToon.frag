@@ -4,6 +4,8 @@ in vec3 fragPosition;
 in vec4 vertColour;
 in vec3 fragNormal;
 
+uniform vec3 ambientIntensity;
+uniform vec3 objectColour;
 uniform vec3 lightPosition;
 uniform vec3 lightColour;
 
@@ -13,6 +15,8 @@ void main() {
 	vec3 norm = normalize(fragNormal);
 	vec3 lightDir = normalize(lightPosition - fragPosition);
 	float intensity = max(dot(norm, lightDir), 0.0);
+	
+	vec3 ambient = ambientIntensity * objectColour;
 	
 	vec3 multiplier;
 	
@@ -32,6 +36,6 @@ void main() {
         multiplier = vec3(0.2, 0.2, 0.2);
     }
     
-    vec3 finalColour = vertColour.rgb * multiplier * lightColour;
+    vec3 finalColour = vertColour.rgb * multiplier * lightColour + ambient;
     fragColour = vec4(finalColour, 1.0f);
 }

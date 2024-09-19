@@ -3,21 +3,11 @@
 //
 package inft3032.drawables;
 
-import inft3032.assign.AssignGLListener;
-import inft3032.assign.Shader;
-import inft3032.math.Matrix4;
-import inft3032.math.MatrixFactory;
-import inft3032.math.Vector3;
-import inft3032.scene.Scene;
-
-import java.io.File;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL3;
-
 
 
 public class Box extends Shape {
@@ -77,10 +67,10 @@ public class Box extends Shape {
 			    -width / 2, height / 2, -depth / 2, -1.0f, 0.0f, 0.0f, r, g, b,
 
 			    // Right face
-			     width / 2, -height / 2, -depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
-			     width / 2, -height / 2, depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
-			     width / 2, height / 2, depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
-			     width / 2, height / 2, -depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
+			    width / 2, -height / 2, -depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
+			    width / 2, -height / 2, depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
+			    width / 2, height / 2, depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
+			    width / 2, height / 2, -depth / 2, 1.0f, 0.0f, 0.0f, r, g, b,
 
 			    // Top face
 			    -width / 2, height / 2, depth / 2, 0.0f, 1.0f, 0.0f, r, g, b,

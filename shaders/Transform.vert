@@ -16,8 +16,7 @@ void main() {
 	gl_Position = projection * view * model * vec4(vPos, 1.0);;
 	
 	fragPosition = vec3(model * vec4(vPos, 1.0));
-    //fragNormal = mat3(transpose(inverse(model))) * normal;
-    fragNormal = vec3(0.0, 1.0, 0.0); // Hardcoded, undesired but works
+    fragNormal = normal;
 	
 	vertColour = vec4(colour, 1.0);
 }

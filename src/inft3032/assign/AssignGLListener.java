@@ -4,15 +4,9 @@
 
 package inft3032.assign;
 
-import inft3032.drawables.Box;
-import inft3032.drawables.Material;
 import inft3032.drawables.Shape;
-import inft3032.drawables.Triangle;
-import inft3032.drawables.Vertex;
-import inft3032.lighting.PointLight;
 import inft3032.math.Matrix4;
 import inft3032.math.MatrixFactory;
-import inft3032.math.Ray;
 import inft3032.math.Vector3;
 import inft3032.scene.Scene;
 
@@ -39,11 +33,14 @@ public class AssignGLListener implements GLEventListener {
 		GL3 gl = drawable.getGL().getGL3();
 		
 		gl.glClearColor(0, 0, 0, 0); // Set colour to black
-		gl.glEnable(GL.GL_CULL_FACE); // Enable backface culling
+		// gl.glEnable(GL.GL_CULL_FACE); // Enable backface culling - no longer useful
+		gl.glDisable(GL.GL_CULL_FACE); // Disable backface culling
+		gl.glEnable(GL.GL_DEPTH_TEST); // Enable depth testing
+
 	    
 	    // Initialise and compile shaders
 	    try {
-	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformToon.frag"));
+	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformDiffuse.frag"));
 	        shader.compile(gl);
 	        System.out.println("Shaders have compiled successfully.");
 		} 
@@ -69,11 +66,20 @@ public class AssignGLListener implements GLEventListener {
 		Matrix4 viewMatrix = MatrixFactory.lookAt(scene.camera.getPosition(), scene.camera.getDirection(), scene.camera.getUp());	
 		
 		// Set uniform locations
+		shader.setUniform("viewPosition", scene.camera.getPosition(), gl);
 		shader.setUniform("projection", projectionMatrix, gl);
 	    shader.setUniform("view", viewMatrix, gl);
 	    
+	    // Ambient lighting uniforms
+	    shader.setUniform("ambientIntensity", scene.ambient, gl);
+	    shader.setUniform("objectColour", new Vector3(1.0f, 1.0f, 1.0f), gl);
+	    
+	    // Specular lighting uniforms
+	    shader.setUniform("shininess", 5.0f, gl);
+	    
 	    // Loop through all lights in the scene
 	    for (int i = 0; i != scene.lights.length; i++) {
+	    	// Set light uniforms
 	    	shader.setUniform("lightPosition", scene.lights[i].location, gl);
 	    	shader.setUniform("lightColour", scene.lights[i].colour, gl);
 	    }
