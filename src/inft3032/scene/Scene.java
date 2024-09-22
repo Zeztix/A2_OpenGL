@@ -255,7 +255,7 @@ public class Scene {
                             throw new SceneFileException("#texture: more texture defined than in #texture_num command");
                         try {
                         	String f = tokens.readString();
-                        	Image image = new Image(fileName, 0); 
+                        	Image image = new Image(f, 0);
                         	textures[currentTextureIndex] = new Texture(currentTextureIndex, f, image);
                         } catch (Exception e) {
                             throw new SceneFileException("Error ("+e+") reading texture image file: " + fileName);
