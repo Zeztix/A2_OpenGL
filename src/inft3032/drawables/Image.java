@@ -354,7 +354,8 @@ public class Image {
             iScanLineSize++;
             padded = true;
         }
-        if (iScanLineSize * height != sizeOfBitmap) {
+        iScanLineSize = iScanLineSize * height + 2;
+        if (iScanLineSize != sizeOfBitmap) {
             throw new IOException("Bitmap image size wrong");
         }
         pixels = new int[height * width];

@@ -9,7 +9,7 @@
 	"shaders/Transform.vert"
 	"shaders/TransformTextured.frag"
 #texture_num 1
-#texture "crate2.bmp"
+#texture "textures/crate2.bmp"
 #material_num 1
 #material
 	1.0 1.0 1.0
