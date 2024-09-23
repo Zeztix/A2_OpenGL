@@ -5,6 +5,7 @@
 package inft3032.assign;
 
 import inft3032.drawables.Shape;
+import inft3032.drawables.Texture;
 import inft3032.math.Matrix4;
 import inft3032.math.MatrixFactory;
 import inft3032.math.Vector3;
@@ -36,11 +37,11 @@ public class AssignGLListener implements GLEventListener {
 		// gl.glEnable(GL.GL_CULL_FACE); // Enable backface culling - no longer useful
 		gl.glDisable(GL.GL_CULL_FACE); // Disable backface culling
 		gl.glEnable(GL.GL_DEPTH_TEST); // Enable depth testing
-
+		gl.glEnable(GL.GL_TEXTURE_2D); // Enable texturing
 	    
 	    // Initialise and compile shaders
 	    try {
-	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformDiffuse.frag"));
+	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformTextured.frag"));
 	        shader.compile(gl);
 	        System.out.println("Shaders have compiled successfully.");
 		} 
@@ -50,6 +51,9 @@ public class AssignGLListener implements GLEventListener {
 		
 		for (Shape s : scene.shapes) {
 			s.init(gl);
+		}
+		for (Texture t : scene.textures) {
+			t.init(gl);
 		}
 	}
 	
@@ -76,6 +80,9 @@ public class AssignGLListener implements GLEventListener {
 	    
 	    // Specular lighting uniforms
 	    shader.setUniform("shininess", 5.0f, gl);
+	    
+	    // Texture uniforms
+	    shader.setUniform("tex", 0, gl);
 	    
 	    // Loop through all lights in the scene
 	    for (int i = 0; i != scene.lights.length; i++) {

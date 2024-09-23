@@ -3,6 +3,9 @@
 //
 package inft3032.drawables;
 
+import java.nio.IntBuffer;
+
+import javax.media.opengl.GL;
 import javax.media.opengl.GL3;
 
 /**
@@ -20,6 +23,8 @@ public class Texture {
     public String fileName;
     public Image image;
     
+    public int textureID;
+    
     public Texture(int index, String filename, Image image) {
     	this.index = index;
     	this.fileName = filename;
@@ -28,5 +33,29 @@ public class Texture {
     
     public void init(GL3 gl) {
     	
+    	// Generate texture ID
+    	int[] temp = new int[]{1};
+    	gl.glGenTextures(1, IntBuffer.wrap(temp));
+    	textureID = temp[0];
+    	gl.glBindTexture(GL.GL_TEXTURE_2D, textureID); // Bind the ID
+    	
+    	// Allocate storage for the texture
+    	gl.glTexStorage2D(GL.GL_TEXTURE_2D, 1, GL.GL_RGB8, image.width(), image.height());
+    	
+    	// Create a buffer to hold the pixel data
+        IntBuffer pixelBuffer = IntBuffer.allocate(image.width() * image.height());
+        
+        // Loop through each pixel of the image
+        for (int row = 0; row < image.height(); row++) {
+            for (int col = 0; col < image.width(); col++) {
+                pixelBuffer.put(image.get(col, row)); // Get the image data
+            }
+        }
+        
+        // Flip the buffer for reading by OpenGL
+        pixelBuffer.flip();
+        
+        // Send the data to OpenGL
+        gl.glTexSubImage2D(GL.GL_TEXTURE_2D, 0, 0, 0, image.width(), image.height(), GL.GL_BGRA, GL.GL_UNSIGNED_BYTE, pixelBuffer);
     }
 }
