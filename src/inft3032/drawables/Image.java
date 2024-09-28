@@ -55,6 +55,12 @@ public class Image {
         this.width = width;
         pixels = new int[this.width * this.height];
     }
+    
+    public Image(int height, int width, int[] pixels) {
+    	this.height = height;
+    	this.width = width;
+    	this.pixels = pixels;
+    }
 
     /**
      * Construct an image from an existing image.

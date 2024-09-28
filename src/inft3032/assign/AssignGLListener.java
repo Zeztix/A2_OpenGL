@@ -4,6 +4,7 @@
 
 package inft3032.assign;
 
+import inft3032.drawables.Image;
 import inft3032.drawables.Shape;
 import inft3032.drawables.Texture;
 import inft3032.math.Matrix4;
@@ -12,6 +13,8 @@ import inft3032.math.Vector3;
 import inft3032.scene.Scene;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL3;
@@ -23,6 +26,7 @@ public class AssignGLListener implements GLEventListener {
 
 	Scene scene;
 	private Shader shader;
+	private GLAutoDrawable glAutoDrawable;
 
 	public AssignGLListener(Scene s) {
 		this.scene = s;
@@ -31,6 +35,7 @@ public class AssignGLListener implements GLEventListener {
 	// Called once at the start. Initialisation code goes here
 	public void init(GLAutoDrawable drawable) {
 		
+		this.glAutoDrawable = drawable;
 		GL3 gl = drawable.getGL().getGL3();
 		
 		gl.glClearColor(0, 0, 0, 0); // Set colour to black
@@ -97,9 +102,13 @@ public class AssignGLListener implements GLEventListener {
 			
 			s.draw(gl);
 		}
-		
+
 		// Disable the shader
 		shader.disable(gl);
+
+		// Take a screenshot of the rendered scene
+		takeScreenshot(glAutoDrawable, "screenshot.bmp");
+	    System.out.println("Screenshot taken");
 	}
 
 	// Called once at the end. You should clean up any resources here
@@ -118,5 +127,51 @@ public class AssignGLListener implements GLEventListener {
 		// Enable shader and up the projection matrix
 		shader.enable(gl);
 		shader.setUniform("projection", projectionMatrix, gl);
+	}
+	
+	public void takeScreenshot(GLAutoDrawable drawable, String fileName) {
+		
+		GL3 gl = drawable.getGL().getGL3();
+		
+		// Ensure all rendering commands are finished
+	    gl.glFinish(); 
+		
+		// Get the width and height of the current viewport
+		int width = drawable.getWidth();
+	    int height = drawable.getHeight();
+	    
+	    // Create a buffer to store the pixel data
+	    ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 3);
+	    
+	    // Read pixels from the buffer
+	    gl.glReadBuffer(GL.GL_FRONT);
+	    gl.glReadPixels(0, 0, width, height, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, buffer);
+	    
+	    buffer.rewind();
+	    
+	    // Flip the image, as OpenGL returns image upside down
+	    int[] pixels = new int[width * height];
+	    
+	    for (int row = 0; row < height; row++) {
+	        for (int col = 0; col < width; col++) {
+	        	
+	            int index = (row * width + col) * 3;
+	            int r = buffer.get(index) & 0xFF;
+	            int g = buffer.get(index + 1) & 0xFF;
+	            int b = buffer.get(index + 2) & 0xFF;
+	            
+	            // Store the pixel data in the array
+	            pixels[(height - row - 1) * width + col] = (255 << 24) | (r << 16) | (g << 8) | b;
+	        }
+	    }
+	    
+	    // Use the Image class to save the image as a BMP file
+	    Image screenshot = new Image(height, width, pixels);
+	    try {
+	    	screenshot.write(fileName);
+	    }
+	    catch (IOException e) {
+	    	System.err.println("Failed to save screenshot: " + e.getMessage());
+	    }
 	}
 }
