@@ -7,8 +7,8 @@ in vec3 fragNormal;
 uniform vec3 ambientIntensity;
 uniform vec3 objectColour;
 uniform int numLights;
-uniform vec3 lightPosition;
-uniform vec3 lightColour;
+uniform vec3 lightPositions[2]; // Only two light positions
+uniform vec3 lightColours[2];
 
 out vec4 fragColour;
 
@@ -20,9 +20,9 @@ void main() {
 	vec3 multiplier = vec3(0.0);
 	
     // Loop through the lights
-    for (int i = -1; i < numLights; i++) {
+    for (int i = -1; i < numLights + 1; i++) {
     
-		vec3 lightDir = normalize(lightPosition - fragPosition);
+		vec3 lightDir = normalize(lightPositions[i] - fragPosition);
 		float intensity = max(dot(norm, lightDir), 0.0);
 		
 		if (intensity > 0.95) {
@@ -40,8 +40,8 @@ void main() {
 	    else {
 	        multiplier = vec3(0.2, 0.2, 0.2);
 	    }
+	    
+	    vec3 finalColour = vertColour.rgb * multiplier * lightColours[i] + ambient;
+		fragColour = vec4(finalColour, 1.0f);
 	}
-    
-    vec3 finalColour = vertColour.rgb * multiplier * lightColour + ambient;
-    fragColour = vec4(finalColour, 1.0f);
 }
