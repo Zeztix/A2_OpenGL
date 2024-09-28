@@ -46,7 +46,7 @@ public class AssignGLListener implements GLEventListener {
 	    
 	    // Initialise and compile shaders
 	    try {
-	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformTextured.frag"));
+	        shader = new Shader(new File("shaders/Transform.vert"), new File("shaders/TransformToon.frag"));
 	        shader.compile(gl);
 	        System.out.println("Shaders have compiled successfully.");
 		} 
@@ -89,6 +89,8 @@ public class AssignGLListener implements GLEventListener {
 	    
 	    // Texture uniforms
 	    shader.setUniform("tex", 0, gl);
+	    
+	    shader.setUniform("numLights", scene.lights.length, gl);
 	    
 	    // Loop through all lights in the scene
 	    for (int i = 0; i != scene.lights.length; i++) {
