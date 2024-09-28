@@ -65,6 +65,7 @@ public class AssignGLListener implements GLEventListener {
 	// Called every frame. You should have your update and render code here
 	public void display(GLAutoDrawable drawable) {
 		
+		this.glAutoDrawable = drawable; // Ensure it updates
 		GL3 gl = drawable.getGL().getGL3();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT); // Clear colour and depth buffers
         
@@ -118,15 +119,16 @@ public class AssignGLListener implements GLEventListener {
 	// Called when the window is resized. You should update your projection matrix here.
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		
+		this.glAutoDrawable = drawable;
 		GL3 gl = drawable.getGL().getGL3();
-		
-		// Get the new aspect ratio and projection matrix
+
 		float aspect = (float) width / height;
-		Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), aspect, 0.1f, 10.0f);
+		Matrix4 projectionMatrix = MatrixFactory.perspective(scene.camera.getHeightAngle(), aspect, 0.1f, 100.0f);
 		
 		// Enable shader and up the projection matrix
 		shader.enable(gl);
 		shader.setUniform("projection", projectionMatrix, gl);
+		shader.disable(gl);
 	}
 	
 	public void takeScreenshot(GLAutoDrawable drawable, String fileName) {
@@ -141,17 +143,18 @@ public class AssignGLListener implements GLEventListener {
 	    int height = drawable.getHeight();
 	    
 	    // Create a buffer to store the pixel data
+	    // TODO: Index out of bounds error when reshaping the window, doesn't prevent resizing and taking screenshots though.
 	    ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 3);
 	    
 	    // Read pixels from the buffer
-	    gl.glReadBuffer(GL.GL_FRONT);
+	    buffer.clear();
+	    gl.glReadBuffer(GL.GL_BACK);
 	    gl.glReadPixels(0, 0, width, height, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, buffer);
 	    
-	    buffer.rewind();
-	    
-	    // Flip the image, as OpenGL returns image upside down
+	    // Get the size of the image
 	    int[] pixels = new int[width * height];
 	    
+	    // Loop through scene pixels
 	    for (int row = 0; row < height; row++) {
 	        for (int col = 0; col < width; col++) {
 	        	
@@ -160,7 +163,7 @@ public class AssignGLListener implements GLEventListener {
 	            int g = buffer.get(index + 1) & 0xFF;
 	            int b = buffer.get(index + 2) & 0xFF;
 	            
-	            // Store the pixel data in the array
+	            // Store the pixel data in the array and flip it verically
 	            pixels[(height - row - 1) * width + col] = (255 << 24) | (r << 16) | (g << 8) | b;
 	        }
 	    }
